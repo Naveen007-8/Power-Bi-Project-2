@@ -17,7 +17,7 @@ This Power BI project provides a comprehensive analysis of BMW sales performance
 ## How to View
 1. Download the `BMW Dashboard Project-2.pbip` file from this repository.
 2. Open it using **Power BI Desktop**.
-3. (Optional) If you have a live link, [Insert Link Here].
+
 
 ---
 *Developed by Naveen - Data Analyst Portfolio*
