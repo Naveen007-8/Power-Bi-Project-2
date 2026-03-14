@@ -19,7 +19,7 @@ This Power BI project provides a comprehensive analysis of BMW sales performance
 2. Open it using **Power BI Desktop**.
 
  **Project File Link:**  
-[Click here to view the Dashboard File]()
+[Click here to view the Dashboard File](https://github.com/Naveen007-8/Power-Bi-Project-2/blob/main/BMW%20Dashboard%20Project-2.pbip)
 
 
 ---
