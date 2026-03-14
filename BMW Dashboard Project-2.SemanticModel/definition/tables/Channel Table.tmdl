@@ -1,0 +1,40 @@
+table 'Channel Table'
+	lineageTag: ba3241af-a222-45f6-a265-515ba19dc366
+
+	column 'Channel ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 81a5774f-f0e5-4fc0-baed-a8d68359d7c4
+		summarizeBy: none
+		sourceColumn: Channel ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Channel
+		dataType: string
+		lineageTag: 752d52d3-9ebc-4604-a4f3-dd88f4c93f0a
+		summarizeBy: none
+		sourceColumn: Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Channel Table' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\Projects\Power BI\Project-2\Dataset's\BMW Files\BMW_Sales_Data.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type text}, {"Year", Int64.Type}, {"Model", type text}, {"Revenue", Int64.Type}, {"Quantity Sold", Int64.Type}, {"Region", type text}, {"Country", type text}, {"Channel", type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each [Date] <> null and [Date] <> ""),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"Channel"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Added Index" = Table.AddIndexColumn(#"Removed Duplicates", "Index", 1, 1, Int64.Type),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Index",{{"Index", "Channel ID"}}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns",{"Channel ID", "Channel"})
+				in
+				    #"Reordered Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

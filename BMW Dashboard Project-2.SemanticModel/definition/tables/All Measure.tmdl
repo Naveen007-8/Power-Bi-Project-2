@@ -1,0 +1,154 @@
+table 'All Measure'
+	lineageTag: 1f1bcff6-2977-47f9-9b54-2f701b754184
+
+	measure Revenue = sum('BMW Main-1'[Total])
+		formatString: 0
+		lineageTag: f6278a24-009a-4b90-8047-997eceebb798
+
+	measure 'Revenue PY' = CALCULATE( [Revenue],DATEADD('Calendar'[Date],-1,YEAR))
+		formatString: 0
+		lineageTag: a908def4-f972-4d79-92ed-50e1a3ef1fa3
+
+	measure 'Revenue Variance' = [Revenue]-[Revenue PY]
+		formatString: 0
+		lineageTag: 3f43f6fa-ba0d-4caf-93b8-190d1aee884c
+
+	measure 'Revenue Growth' = DIVIDE([Revenue Variance],[Revenue PY])
+		lineageTag: 4b26591c-eac5-481b-b807-92ae360b73e5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Revenue Variance % Arrow' = VAR _upArrow=UNICHAR(129129) VAR _downArrow=UNICHAR(129131) RETURN IF(ISBLANK([Revenue]),BLANK(),IF([Revenue Variance]>0," +" &ROUND([Revenue Growth]*100,1)&"% " & _upArrow,ROUND([Revenue Growth]*100,1) & "% " & _downArrow))
+		lineageTag: c4660a4f-3935-4aec-8919-f16a0e959cdb
+
+	measure Period = FORMAT(MIN('Calendar'[Date]),"MMM D, YYYY") & "-" & FORMAT(MAX('Calendar'[Date]),"MMM D, YYYY")
+		lineageTag: a7c5fd8a-1bd1-452f-bc32-469838698d05
+
+	measure 'QTY Sold' = SUM('BMW Main-1'[Quantity Sold])
+		formatString: 0
+		lineageTag: d16b6122-ac2e-4428-9abc-3149c5d49ded
+
+	measure 'QTY Sold PY' = CALCULATE([QTY Sold],DATEADD('Calendar'[Date],-1,YEAR))
+		formatString: 0
+		lineageTag: da7870af-4c11-4ee3-9084-70379ee644c4
+
+	measure 'QTY Sold Variance' = [QTY Sold]-[QTY Sold PY]
+		formatString: 0
+		lineageTag: e65d4a39-05fc-4cef-b8ce-d44370d41f23
+
+	measure 'QTY Sold Variance % Arrow' = VAR _upArrow=UNICHAR(129129) VAR _downArrow=UNICHAR(129131) RETURN IF(ISBLANK([QTY Sold]),BLANK(),IF([QTY Sold Variance]>0," +" &ROUND([QTY Sold Growth]*100,1)&"% " & _upArrow,ROUND([QTY Sold Growth]*100,1) & "% " & _downArrow))
+		lineageTag: 415f2550-e466-43b6-8d94-47c407551898
+
+	measure 'QTY Sold Growth' = DIVIDE([QTY Sold Variance],[QTY Sold PY])
+		lineageTag: c6bd4394-9a22-4af0-b7e5-1a597e56b9c3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Price' = DIVIDE([Revenue],[QTY Sold])
+		lineageTag: 723b86ed-ac7e-4168-a6f0-74065f196fdb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Price Formatted' = FORMAT([Avg Price],"$#,.0,K")
+		lineageTag: 21bc0893-5734-4414-8f99-c0fe9d7a1684
+
+	measure 'Revenue Sparkline' = ```
+			
+			// Line and area colours - use %23 instead of # for Firefox compatibility (Measure Derived from Eldersveld Modified by Kolosko)
+			
+			// "Date" field used in this example along the X axis
+			VAR XMinDate = MIN('Calendar'[Monthnum])
+			VAR XMaxDate = MAX('Calendar'[Monthnum])
+			
+			// Obtain overall min and overall max measure values when evaluated for each date
+			VAR YMinValue = MINX(Values('Calendar'[Monthnum]),CALCULATE([Revenue]))
+			VAR YMaxValue = MAXX(Values('Calendar'[Monthnum]),CALCULATE([Revenue]))
+			
+			// Build table of X & Y coordinates and fit to 50 x 150 viewbox
+			VAR SparklineTable = ADDCOLUMNS(
+			    SUMMARIZE('Calendar','Calendar'[Monthnum]),
+			        "X",INT(150 * DIVIDE('Calendar'[Monthnum] - XMinDate, XMaxDate - XMinDate)),
+			        "Y",INT(50 * DIVIDE([Revenue] - YMinValue,YMaxValue - YMinValue)))
+			
+			// Concatenate X & Y coordinates to build the sparkline
+			VAR Lines = CONCATENATEX(SparklineTable,[X] & "," & 50-[Y]," ", 'Calendar'[Monthnum])
+			
+			// Add to SVG, and verify Data Category is set to Image URL for this measure
+			VAR SVGImageURL = 
+			    "data:image/svg+xml;utf8," & 
+			    "<svg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 150 50'>" & 
+			     "<polyline fill='navy' fill-opacity='0.3' stroke='navy' 
+			      stroke-width='3' points=' 0 50 " & Lines & 
+			      " 150 150 Z '/></svg>"
+			RETURN SVGImageURL
+			```
+		lineageTag: 5bc6d6b6-f7a8-4bbb-8e6f-1750e24bce26
+		dataCategory: ImageUrl
+
+	measure 'Opaque Area Sparkline (no one value) bright' = ```
+			
+			// Static line color - use %23 instead of # for Firefox compatibility (Measure Derived from Eldersveld Modified by Kolosko)
+			VAR LineColour = "%23118DFF"
+			VAR PointColour = "white"
+			VAR Defs = "<defs>
+			    <linearGradient id='grad' x1='0' y1='25' x2='0' y2='50' gradientUnits='userSpaceOnUse'>
+			        <stop stop-color='#118DFF' offset='0' />
+			        <stop stop-color='#118DFF' offset='0.3' />
+			        <stop stop-color='white' offset='1' />
+			    </linearGradient>
+			</defs>"
+			// "Date" field used in this example along the X axis
+			VAR XMinDate = MIN('Calendar'[Monthnum])
+			VAR XMaxDate = MAX('Calendar'[Monthnum])
+			
+			// Obtain overall min and overall max measure values when evaluated for each date
+			VAR YMinValue = MINX(Values('Calendar'[Monthnum]),CALCULATE([QTY Sold]))
+			VAR YMaxValue = MAXX(Values('Calendar'[Monthnum]),CALCULATE([QTY Sold]))
+			
+			// Build table of X & Y coordinates and fit to 50 x 150 viewbox
+			VAR SparklineTable = ADDCOLUMNS(
+			    SUMMARIZE('Calendar','Calendar'[Monthnum]),
+			        "X",INT(150 * DIVIDE('Calendar'[Monthnum] - XMinDate, XMaxDate - XMinDate)),
+			        "Y",INT(50 * DIVIDE([QTY Sold] - YMinValue,YMaxValue - YMinValue)))
+			
+			// Concatenate X & Y coordinates to build the sparkline
+			VAR Lines = CONCATENATEX(SparklineTable,[X] & "," & 50-[Y]," ", 'Calendar'[Monthnum])
+			
+			// Last data points on the line
+			VAR LastSparkYValue = MAXX( FILTER(SparklineTable, 'Calendar'[Monthnum] = XMaxDate), [Y])
+			VAR LastSparkXValue = MAXX( FILTER(SparklineTable, 'Calendar'[Monthnum] = XMaxDate), [X])
+			
+			// Add to SVG, and verify Data Category is set to Image URL for this measure
+			VAR SVGImageURL = 
+			    "data:image/svg+xml;utf8," & 
+			    --- gradient---
+			    "<svg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='-7 -7 164 64'>" & Defs & 
+			     "<polyline fill='url(#grad)' fill-opacity='0.3' stroke='transparent' 
+			      stroke-width='0' points=' 0 50 " & Lines & 
+			      " 150 150 Z '/>" &
+			    --- Lines---
+			    "<polyline 
+			        fill='transparent' stroke='" & LineColour & "' 
+			        stroke-linecap='round' stroke-linejoin='round' 
+			        stroke-width='3' points=' " & Lines & 
+			      " '/>" &
+			    --- Last Point---
+			        "<circle cx='"& LastSparkXValue & "' cy='" & 50 - LastSparkYValue & "' r='4' stroke='" & LineColour & "' stroke-width='3' fill='" & PointColour & "' />" &
+			        "</svg>"
+			RETURN SVGImageURL
+			```
+		lineageTag: 87dcffc0-f711-4e21-abfa-25ed96307794
+		dataCategory: ImageUrl
+
+	partition 'All Measure' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+

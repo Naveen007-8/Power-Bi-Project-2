@@ -1,0 +1,105 @@
+table 'BMW Main-1'
+	lineageTag: 8b794b38-8841-456e-abe1-e58cb2b71a56
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 46e886b7-029b-45cf-8f7a-90a3872901de
+		summarizeBy: none
+		sourceColumn: Date
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 50bbe911-9a13-4cc7-a6cd-c784b759f1d2
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost Price'
+		dataType: double
+		formatString: 0
+		lineageTag: c026616b-a03b-4f8c-bd31-e26e4ed342f8
+		summarizeBy: sum
+		sourceColumn: Cost Price
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quantity Sold'
+		dataType: int64
+		formatString: 0
+		lineageTag: e3a9a79e-8f0c-4959-86b2-445444df2934
+		summarizeBy: sum
+		sourceColumn: Quantity Sold
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Model ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 5eefde85-eaa5-4010-b311-50c2c2904816
+		summarizeBy: none
+		sourceColumn: Model ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Country ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 4c0f1d78-0591-4772-aca4-87b03acb13ec
+		summarizeBy: none
+		sourceColumn: Country ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Channel ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: e53ab7b2-7b08-4692-8e63-5752fb5f3923
+		summarizeBy: none
+		sourceColumn: Channel ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total = 'BMW Main-1'[Cost Price]*'BMW Main-1'[Quantity Sold]
+		formatString: 0
+		lineageTag: 5c2ed94f-85e7-4019-b5e9-fc7a13b4dfee
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'BMW Main-1' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\Projects\Power BI\Project-2\Dataset's\BMW Files\BMW_Sales_Data.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type text}, {"Year", Int64.Type}, {"Model", type text}, {"Revenue", Int64.Type}, {"Quantity Sold", Int64.Type}, {"Region", type text}, {"Country", type text}, {"Channel", type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each [Date] <> null and [Date] <> ""),
+				    #"Merged Queries" = Table.NestedJoin(#"Filtered Rows", {"Model"}, #"Model Table", {"Model"}, "Model Table", JoinKind.LeftOuter),
+				    #"Expanded Model Table" = Table.ExpandTableColumn(#"Merged Queries", "Model Table", {"Model ID"}, {"Model ID"}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Expanded Model Table", {"Region", "Country"}, #"Country Table", {"Region", "Country"}, "Country Table", JoinKind.LeftOuter),
+				    #"Expanded Country Table" = Table.ExpandTableColumn(#"Merged Queries1", "Country Table", {"Country ID"}, {"Country Table.Country ID"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Expanded Country Table",{"Country Table.Country ID"}),
+				    #"Merged Queries2" = Table.NestedJoin(#"Removed Columns", {"Region", "Country"}, #"Country Table", {"Region", "Country"}, "Country Table", JoinKind.LeftOuter),
+				    #"Expanded Country Table1" = Table.ExpandTableColumn(#"Merged Queries2", "Country Table", {"Country ID"}, {"Country ID"}),
+				    #"Merged Queries3" = Table.NestedJoin(#"Expanded Country Table1", {"Channel"}, #"Channel Table", {"Channel"}, "Channel Table", JoinKind.LeftOuter),
+				    #"Expanded Channel Table" = Table.ExpandTableColumn(#"Merged Queries3", "Channel Table", {"Channel ID"}, {"Channel ID"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Expanded Channel Table",{"Date", "Year", "Revenue", "Quantity Sold", "Channel", "Model ID", "Country ID", "Region", "Country", "Channel ID", "Model"}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Reordered Columns",{"Region", "Country", "Model", "Channel"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns1",{{"Revenue", "Cost Price"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns",101997,44003,Replacer.ReplaceValue,{"Cost Price"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

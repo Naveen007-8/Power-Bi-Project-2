@@ -1,0 +1,139 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 367.83595142935172,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 367.83595142935172,
+            "y": 105.69998604291715
+          },
+          "nodeIndex": "BMW Main-1",
+          "nodeLineageTag": "8b794b38-8841-456e-abe1-e58cb2b71a56",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1063.3105328647659,
+            "y": 71.636400012913271
+          },
+          "nodeIndex": "Car Images",
+          "nodeLineageTag": "e3ab4f22-cd95-46e0-8db7-c2ef9edcd4cd",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 37.790532657252925,
+            "y": 0
+          },
+          "nodeIndex": "Channel Table",
+          "nodeLineageTag": "ba3241af-a222-45f6-a265-515ba19dc366",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1055.4985479310799,
+            "y": 234.124840619902
+          },
+          "nodeIndex": "Countries with Flags URL",
+          "nodeLineageTag": "a6e27a3f-b852-415e-81f1-6e713ec7b779",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 684.79323264890706,
+            "y": 44.039409747255547
+          },
+          "nodeIndex": "Country Table",
+          "nodeLineageTag": "8758b252-ce9e-4c7b-a194-c38279238087",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 84.824122288899275,
+            "y": 363.09579531509206
+          },
+          "nodeIndex": "Model Table",
+          "nodeLineageTag": "a9869dc4-eadd-4723-b33a-242100c5cda9",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 688.00408227516,
+            "y": 356.26387141823034
+          },
+          "nodeIndex": "Calendar",
+          "nodeLineageTag": "3b0fb332-3d0e-480d-b0c6-dbb7a3c3fba9",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1309.520000207513,
+            "y": 226.13193570911517
+          },
+          "nodeIndex": "All Measure",
+          "nodeLineageTag": "1f1bcff6-2977-47f9-9b54-2f701b754184",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1555.72946755026,
+            "y": 202.13193570911517
+          },
+          "nodeIndex": "Period Slicer",
+          "nodeLineageTag": "f064c153-e310-443d-bc56-72fd416dbb6b",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 70.95554390096882,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

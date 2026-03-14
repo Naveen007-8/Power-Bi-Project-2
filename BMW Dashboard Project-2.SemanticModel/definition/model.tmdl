@@ -1,0 +1,28 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["BMW Main-1","Model Table","Country Table","Channel Table","Car Images","Countries with Flags URL","All Measure"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'Model Table'
+ref table 'BMW Main-1'
+ref table 'Countries with Flags URL'
+ref table 'Car Images'
+ref table 'Channel Table'
+ref table 'Country Table'
+ref table DateTableTemplate_25fc21aa-9e63-4bfc-97de-03a7f837d82d
+ref table Calendar
+ref table LocalDateTable_462bca92-8d4f-41b1-9a6c-fb4aceaf82df
+ref table 'All Measure'
+ref table 'Period Slicer'
+
+ref cultureInfo en-US
+

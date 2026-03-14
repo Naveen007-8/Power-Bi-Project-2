@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "BMW Dashboard Project-2"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7ae03181-d0ce-47d5-bae6-302b2a0332b8"
+  }
+}

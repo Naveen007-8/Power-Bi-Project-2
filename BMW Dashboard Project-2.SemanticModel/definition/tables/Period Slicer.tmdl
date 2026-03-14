@@ -1,0 +1,49 @@
+table 'Period Slicer'
+	lineageTag: f064c153-e310-443d-bc56-72fd416dbb6b
+
+	column 'Period Slicer'
+		lineageTag: 3d65a470-1371-4ba0-af2b-3bb1a9de354d
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Period Slicer Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Period Slicer Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Period Slicer Fields'
+		isHidden
+		lineageTag: 28e6b693-5bb9-4522-8f75-95de507a5239
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Period Slicer Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Period Slicer Order'
+		isHidden
+		formatString: 0
+		lineageTag: 61c58162-1b4b-4c92-b2bd-0a8775eb1f45
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Period Slicer' = calculated
+		mode: import
+		source =
+				{
+				    ("Year", NAMEOF('Calendar'[Year]), 0),
+				    ("Month", NAMEOF('Calendar'[Month]), 1),
+				    ("Weekday", NAMEOF('Calendar'[Weekday]), 2)
+				}
+
+	annotation PBI_Id = b43af01c2ee7424f9bbf651b715c5fa6
+

@@ -1,0 +1,61 @@
+table 'Country Table'
+	lineageTag: 8758b252-ce9e-4c7b-a194-c38279238087
+
+	column 'Country ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fc84efd-944c-4d53-aac0-b999167aecdf
+		summarizeBy: none
+		sourceColumn: Country ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 232606cd-a9eb-4e77-9368-def5fe4aefc4
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: b83e98fb-457c-49ce-b36c-335fb9d15259
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Flag
+		dataType: string
+		lineageTag: be382f93-31eb-4b01-9a87-e834b2e9cdf1
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: Flag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Country Table' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\Projects\Power BI\Project-2\Dataset's\BMW Files\BMW_Sales_Data.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type text}, {"Year", Int64.Type}, {"Model", type text}, {"Revenue", Int64.Type}, {"Quantity Sold", Int64.Type}, {"Region", type text}, {"Country", type text}, {"Channel", type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each [Date] <> null and [Date] <> ""),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"Region", "Country"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Added Index" = Table.AddIndexColumn(#"Removed Duplicates", "Index", 0, 1, Int64.Type),
+				    #"Added Index1" = Table.AddIndexColumn(#"Added Index", "Index.1", 1, 1, Int64.Type),
+				    #"Removed Columns" = Table.RemoveColumns(#"Added Index1",{"Index"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Removed Columns",{"Index.1", "Region", "Country"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns",{{"Index.1", "Country ID"}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Renamed Columns", {"Country"}, #"Countries with Flags URL", {"Country"}, "Countries with Flags URL", JoinKind.LeftOuter),
+				    #"Expanded Countries with Flags URL" = Table.ExpandTableColumn(#"Merged Queries", "Countries with Flags URL", {"Flag"}, {"Flag"})
+				in
+				    #"Expanded Countries with Flags URL"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

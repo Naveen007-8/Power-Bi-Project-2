@@ -1,0 +1,35 @@
+table 'Car Images'
+	lineageTag: e3ab4f22-cd95-46e0-8db7-c2ef9edcd4cd
+
+	column Model
+		dataType: string
+		lineageTag: 43d65ad3-31a4-4246-9082-c3b0e84eb57d
+		summarizeBy: none
+		sourceColumn: Model
+
+		annotation SummarizationSetBy = Automatic
+
+	column Image
+		dataType: string
+		lineageTag: 59c41aca-e468-41a9-a141-0fa4290be8c2
+		summarizeBy: none
+		sourceColumn: Image
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Car Images' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("D:\Projects\Power BI\Project-2\Dataset's\BMW Files\Car Images.csv"),[Delimiter=",", Columns=2, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"Model", type text}, {"img", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"img", "Image"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

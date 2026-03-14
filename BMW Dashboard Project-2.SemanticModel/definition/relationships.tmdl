@@ -1,0 +1,21 @@
+relationship AutoDetected_392f7467-51ed-4dbf-96a6-c3ad983fceff
+	fromColumn: 'BMW Main-1'.'Model ID'
+	toColumn: 'Model Table'.'Model ID'
+
+relationship AutoDetected_a54d239e-5a1f-4ad4-869e-3e9bb9c6ab0b
+	fromColumn: 'BMW Main-1'.'Country ID'
+	toColumn: 'Country Table'.'Country ID'
+
+relationship AutoDetected_35f845d8-5c75-4129-949a-d5a3db4c06b6
+	fromColumn: 'BMW Main-1'.'Channel ID'
+	toColumn: 'Channel Table'.'Channel ID'
+
+relationship 6991e17e-eb37-46ff-95be-294f20c9b67b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calendar.Date
+	toColumn: LocalDateTable_462bca92-8d4f-41b1-9a6c-fb4aceaf82df.Date
+
+relationship cf64976d-878f-55d2-86df-6de08dd6d58e
+	fromColumn: 'BMW Main-1'.Date
+	toColumn: Calendar.Date
+
