@@ -10,14 +10,13 @@ This Power BI project provides a comprehensive analysis of BMW sales performance
 * **Interactive Filters:** Users can filter by Date, Region, and Vehicle Category.
 
 ## Technical Skills Demonstrated
-* **Data Modeling:** Created a star schema with Fact and Dimension tables (refer to the `.pbism` and `.tmdl` files).
 * **DAX Measures:** Developed custom calculations for Year-over-Year (YoY) growth and Profit Margins.
 * **Power Query:** Cleaned and transformed raw data for better reporting efficiency.
 
 ## How to View
 1. Download the `BMW Dashboard Project-2.pbip` file from this repository.
 2. Open it using **Power BI Desktop**.
-3. ('https://drive.google.com/drive/folders/1jnx5f7r2mWf527R6OdPK-Fr0NjVdXmpq?usp=sharing')
+3. [https://drive.google.com/drive/folders/1jnx5f7r2mWf527R6OdPK-Fr0NjVdXmpq?usp=sharing]
 
 
 ---
